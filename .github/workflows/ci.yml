@@ -216,10 +216,22 @@ jobs:
       - name: Enviar deploy via SSM
         id: ssm-cmd
         run: |
+          PARAMS=$(cat <<'EOF'
+          {"commands":[
+            "docker network create mascotas-network 2>/dev/null || true",
+            "echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin",
+            "docker pull ghcr.io/ifezov/mascotas-app:latest",
+            "docker stop mascotas-app 2>/dev/null || true",
+            "docker rm   mascotas-app 2>/dev/null || true",
+            "docker run -d --name mascotas-app --restart unless-stopped -p 8080:8080 -e SPRING_PROFILES_ACTIVE=prod -e SPRING_DATASOURCE_URL=jdbc:postgresql://mascotas-datos:5432/mascotas -e SPRING_DATASOURCE_USERNAME=mascotas_user -e SPRING_DATASOURCE_PASSWORD=mascotas_pass -e CORS_ORIGINS=* --network mascotas-network ghcr.io/ifezov/mascotas-app:latest",
+            "docker logout ghcr.io"
+          ]}
+          EOF
+          )
           CMD_ID=$(aws ssm send-command \
             --instance-ids "${{ secrets.EC2_APP_ID }}" \
             --document-name "AWS-RunShellScript" \
-            --parameters '{"commands":["sudo -u ec2-user /home/ec2-user/deploy-app.sh"]}' \
+            --parameters "$PARAMS" \
             --comment "Deploy backend ${{ needs.versioning.outputs.new_tag }}" \
             --timeout-seconds 300 \
             --query "Command.CommandId" \
