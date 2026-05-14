@@ -1,0 +1,19 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://mascotas-datos:5432/mascotas}
+    driverClassName: org.postgresql.Driver
+    username: ${DB_USERNAME:mascotas_user}
+    password: ${DB_PASSWORD:mascotas_pass}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+
+cors:
+  allowed-origins: ${CORS_ORIGINS:http://localhost:3000}

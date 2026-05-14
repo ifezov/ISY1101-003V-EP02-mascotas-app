@@ -1,0 +1,22 @@
+services:
+  mascotas-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mascotas-app:latest
+    container_name: mascotas-app
+    environment:
+      SPRING_PROFILES_ACTIVE:     dev
+      SPRING_DATASOURCE_URL:      jdbc:postgresql://mascotas-datos:5432/mascotas
+      SPRING_DATASOURCE_USERNAME: mascotas_user
+      SPRING_DATASOURCE_PASSWORD: mascotas_pass
+      CORS_ORIGINS: http://localhost/
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    networks:
+      - mascotas-network
+
+networks:
+  mascotas-network:
+    external: true
