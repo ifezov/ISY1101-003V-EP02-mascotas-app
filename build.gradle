@@ -43,8 +43,8 @@ test {
 
 sonar {
     properties {
-        property "sonar.projectKey", "EL_PROJECT_KEY_QUE_ANOTASTE"
-        property "sonar.organization", "TU_ORGANIZACION"
+        property "sonar.projectKey", "ifezov"
+        property "sonar.organization", "ifezov"
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
     }
