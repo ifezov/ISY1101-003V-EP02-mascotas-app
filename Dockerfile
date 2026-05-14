@@ -4,7 +4,6 @@ FROM gradle:8.13.0-jdk21 AS build
 WORKDIR /app
 
 COPY build.gradle settings.gradle gradle.properties ./
-COPY gradle ./gradle
 
 RUN gradle dependencies --no-daemon || true
 
